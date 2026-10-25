@@ -12,7 +12,7 @@ from ovos_workshop.skills import OVOSSkill
 from ovos_skill_gui1_demo.faults import FAULTS
 from ovos_skill_gui1_demo.producer import Display, OriginBus
 from ovos_skill_gui1_demo.runner import DemoRunner, Pause
-from ovos_skill_gui1_demo.templates import AMBIENT_WEATHER, TEMPLATE_DATA, template_for
+from ovos_skill_gui1_demo.templates import AMBIENT_WEATHER, TEMPLATE_DATA, template_for, template_in_utterance
 
 SINGLE_HOLD_SECONDS = 20
 IDLE_MARGIN_SECONDS = 10
@@ -52,13 +52,25 @@ class GUI1DemoSkill(OVOSSkill):
 
     @intent_handler("show_template.intent")
     def handle_show_template(self, message: Message):
-        spoken = message.data.get("template", "")
-        template = template_for(spoken)
+        template = self._requested_template(message)
         if template is None:
+            spoken = message.data.get("template") or message.data.get("utterance", "")
             self.log.info(f"gui1-demo: no template for {spoken!r}")
             self.speak_dialog("unknown_template", {"template": spoken})
             return
         self.runner.start(template, lambda origin, pause: self._single(origin, pause, template), message)
+
+    def _requested_template(self, message: Message) -> str | None:
+        spoken = message.data.get("template")
+        if spoken:
+            return template_for(spoken)
+        utterance = message.data.get("utterance", "")
+        template = template_in_utterance(utterance)
+        self.log.warning(
+            f"gui1-demo: the pipeline sent no 'template' slot (match_data keys {sorted(message.data)}); "
+            f"read {template} from the utterance {utterance!r}"
+        )
+        return template
 
     @intent_handler("run_full_demo.intent")
     def handle_full_demo(self, message: Message):

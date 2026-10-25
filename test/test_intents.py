@@ -58,6 +58,12 @@ def test_show_template_media_player_sends_position_update(skill):
     assert sent[2].data["media_playlist"] == sent[0].data["media_playlist"]
 
 
+def test_show_template_without_a_slot_reads_the_utterance(skill):
+    sent = run(skill, skill.handle_show_template, "show_template", utterance="show me the animated image demo")
+    assert shape(sent) == [VS, (PS, ["SYSTEM_animated_image"]), CL]
+    assert_conforming_envelope(sent)
+
+
 def test_show_template_unknown_word_sends_nothing(skill):
     assert run(skill, skill.handle_show_template, "show_template", template="hologram") == []
     assert [m.data["utterance"] for m in spoken(skill)] == ["I have no demo for hologram."]

@@ -187,3 +187,12 @@ def template_for(spoken: str) -> str | None:
     """Map the spoken slot ("audio player", "the weather") to its template name."""
     words = spoken.lower().strip().removeprefix("the ").removesuffix(" template").strip()
     return SPOKEN_NAMES.get(words)
+
+
+def template_in_utterance(utterance: str) -> str | None:
+    """The template whose spoken name appears in the whole utterance, longest name first ("animated image")."""
+    text = f" {utterance.lower()} "
+    for name in sorted(SPOKEN_NAMES, key=len, reverse=True):
+        if f" {name} " in text:
+            return SPOKEN_NAMES[name]
+    return None

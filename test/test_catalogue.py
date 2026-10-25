@@ -17,7 +17,7 @@ from spec_catalogue import (
 )
 
 from ovos_skill_gui1_demo.faults import BARE_PATH_IMAGE, FAULTS
-from ovos_skill_gui1_demo.templates import TEMPLATE_DATA, template_for
+from ovos_skill_gui1_demo.templates import TEMPLATE_DATA, template_for, template_in_utterance
 
 LOCALE = Path(__file__).parent.parent / "ovos_skill_gui1_demo" / "locale" / "en-us"
 MAX_INTENT_LINES = 12
@@ -44,6 +44,8 @@ def test_every_catalogue_template_has_demo_data():
 def test_every_spoken_word_reaches_its_template(word):
     assert template_for(word) == "SYSTEM_" + word.replace(" ", "_")
     assert template_for(f"the {word}") == template_for(word)
+    for utterance in (f"show me the {word} demo", f"demo the {word} template", f"gui demo {word}"):
+        assert template_in_utterance(utterance) == template_for(word), utterance
 
 
 @pytest.mark.parametrize("template", sorted(CATALOGUE))
