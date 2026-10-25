@@ -24,7 +24,7 @@ test = [
     "pytest",
 ]
 
-[project.entry-points."ovos.plugin.skill"]
+[project.entry-points."opm.skill"]
 "ovos-skill-gui1-demo.oscillatelabs" = "ovos_skill_gui1_demo:GUI1DemoSkill"
 
 [tool.setuptools]
