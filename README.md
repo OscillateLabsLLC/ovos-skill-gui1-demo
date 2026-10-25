@@ -4,7 +4,10 @@ An OVOS skill that shows every [OVOS-GUI-1](https://github.com/OpenVoiceOS/archi
 Use it to drive a render backend (for example Visage) through a real intent pipeline, to test conformance, and to record wire fixtures.
 
 The skill is a conforming GUI-1 producer ([8.1](https://github.com/OpenVoiceOS/architecture/blob/b6c1583/gui-1.md#81-a-conforming-producer-application-side-interface-must), [8.2](https://github.com/OpenVoiceOS/architecture/blob/b6c1583/gui-1.md#82-a-conforming-producer-should)).
-The one exception is the degradation demo. It breaks producer rules on purpose.
+There are two exceptions, and both are deliberate:
+
+- The degradation demo breaks producer rules on purpose.
+- The media player demo sends `SYSTEM_media_player`, which only the media subsystem may send. The demo keeps it because no media subsystem on the test stack sends it, and a backend still needs a live source for that template.
 
 ## Install
 

@@ -65,6 +65,7 @@ def test_media_player_nested_entries_carry_every_key():
     assert all(set(entry) == MEDIA_PLAYLIST_KEYS for entry in data["media_playlist"])
     assert all(set(entry) == MEDIA_SEARCH_KEYS for entry in data["media_search_results"])
     assert data["media_playback_state"] in {"playing", "paused", "stopped", "loading", "error"}
+    assert all(0 <= entry["match_confidence"] <= 1 for entry in data["media_search_results"])
 
 
 def test_weather_uses_listed_condition_codes_and_three_forecast_entries():

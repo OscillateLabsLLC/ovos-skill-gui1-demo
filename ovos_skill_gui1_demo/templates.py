@@ -127,7 +127,7 @@ def _search_results() -> list[dict]:
             "image": png(GREEN, GOLD),
             "uri": VIDEO_URI,
             "skill_id": "ovos-skill-gui1-demo.oscillatelabs",
-            "match_confidence": 92,
+            "match_confidence": 0.92,
         },
         {
             "title": "Elephants Dream",
@@ -135,7 +135,7 @@ def _search_results() -> list[dict]:
             "image": png(INK, SKY),
             "uri": "https://download.blender.org/ED/ED_1024.avi",
             "skill_id": "ovos-skill-gui1-demo.oscillatelabs",
-            "match_confidence": 71,
+            "match_confidence": 0.71,
         },
     ]
 
