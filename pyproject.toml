@@ -1,0 +1,46 @@
+[build-system]
+requires = ["setuptools>=64.0.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ovos-skill-gui1-demo"
+dynamic = ["version"]
+description = "An OVOS skill that shows every OVOS-GUI-1 template and surface, for render-backend conformance runs"
+authors = [{ name = "OscillateLabs LLC", email = "mike@oscillatelabs.net" }]
+license = "Apache-2.0"
+license-files = ["LICENSE"]
+readme = "README.md"
+requires-python = ">=3.10"
+keywords = ["ovos", "skill", "gui", "gui-1", "visage"]
+dependencies = [
+    "ovos-utils",
+    "ovos-bus-client",
+    "ovos-workshop",
+]
+
+[project.optional-dependencies]
+test = [
+    "ovos-plugin-manager",
+    "pytest",
+]
+
+[project.entry-points."ovos.plugin.skill"]
+"ovos-skill-gui1-demo.oscillatelabs" = "ovos_skill_gui1_demo:GUI1DemoSkill"
+
+[tool.setuptools]
+packages = ["ovos_skill_gui1_demo"]
+
+[tool.setuptools.dynamic]
+version = { attr = "ovos_skill_gui1_demo.version.__version__" }
+
+[tool.setuptools.package-data]
+ovos_skill_gui1_demo = ["locale/**/*"]
+
+[tool.pytest.ini_options]
+testpaths = ["test"]
+
+[tool.ruff]
+line-length = 130
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP"]

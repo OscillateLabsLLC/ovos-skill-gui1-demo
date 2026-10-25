@@ -1,0 +1,19 @@
+{
+  "skill_id": "ovos-skill-gui1-demo.oscillatelabs",
+  "source": "https://github.com/OscillateLabsLLC/ovos-skill-gui1-demo",
+  "name": "GUI-1 Demo",
+  "description": "Shows every OVOS-GUI-1 template and surface, for render-backend conformance runs",
+  "examples": [
+    "Show me the weather demo",
+    "Run the gui demo",
+    "Show the broken gui demo",
+    "Show the gui update demo",
+    "Show the ambient demo",
+    "Stop the gui demo"
+  ],
+  "tags": [
+    "gui",
+    "demo",
+    "developer"
+  ]
+}
