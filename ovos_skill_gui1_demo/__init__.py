@@ -12,7 +12,13 @@ from ovos_workshop.skills import OVOSSkill
 from ovos_skill_gui1_demo.faults import FAULTS
 from ovos_skill_gui1_demo.producer import Display, OriginBus
 from ovos_skill_gui1_demo.runner import DemoRunner, Pause
-from ovos_skill_gui1_demo.templates import AMBIENT_WEATHER, TEMPLATE_DATA, template_for, template_in_utterance
+from ovos_skill_gui1_demo.templates import (
+    AMBIENT_WEATHER,
+    TEMPLATE_DATA,
+    in_system_unit,
+    template_for,
+    template_in_utterance,
+)
 
 SINGLE_HOLD_SECONDS = 20
 IDLE_MARGIN_SECONDS = 10
@@ -159,7 +165,7 @@ class GUI1DemoSkill(OVOSSkill):
     def _show(self, message: Message, template: str, data: dict, idle: bool | int) -> None:
         self.log.info(f"gui1-demo: show {template} keys={sorted(data)} idle={idle}")
         self.display.serve(message)
-        self.display.show(template, data, idle)
+        self.display.show(template, in_system_unit(data, self.system_unit), idle)
 
     def _set(self, message: Message, key: str, value: Any) -> None:
         self.log.info(f"gui1-demo: gui.value.set {key}={'null' if value is None else 'value'} on {self.gui.page}")
@@ -174,7 +180,7 @@ class GUI1DemoSkill(OVOSSkill):
     def _ambient(self, message: Message, topic: str, data: dict) -> None:
         self.log.info(f"gui1-demo: ambient {topic} keys={sorted(data)}")
         self.display.serve(message)
-        self.display.ambient(topic, data)
+        self.display.ambient(topic, in_system_unit(data, self.system_unit))
 
     def _finish(self, message: Message) -> None:
         self._clear(message)

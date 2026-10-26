@@ -182,6 +182,26 @@ SPOKEN_NAMES: dict[str, str] = {name.removeprefix("SYSTEM_").replace("_", " "): 
 
 AMBIENT_WEATHER = _weather
 
+TEMPERATURE_KEYS = ("current_temp", "min_temp", "max_temp")
+
+
+def fahrenheit(celsius: float) -> int:
+    return round(celsius * 9 / 5 + 32)
+
+
+def in_system_unit(data: dict, system_unit: str) -> dict:
+    """The payload with its Celsius temperatures converted when the device is imperial; any other unit passes through.
+
+    ``SYSTEM_weather`` has no unit key (gui-1.md 3.4), so the numbers are in whatever unit the device is set to, and
+    the demo's figures are written in Celsius. The forecast entries convert the same way.
+    """
+    if system_unit != "imperial":
+        return data
+    out = {k: fahrenheit(v) if k in TEMPERATURE_KEYS and isinstance(v, (int, float)) else v for k, v in data.items()}
+    if isinstance(out.get("forecast"), list):
+        out["forecast"] = [in_system_unit(day, system_unit) for day in out["forecast"]]
+    return out
+
 
 def template_for(spoken: str) -> str | None:
     """Map the spoken slot ("audio player", "the weather") to its template name."""
