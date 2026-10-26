@@ -2,12 +2,9 @@
 
 from collections.abc import Callable
 
-from ovos_skill_gui1_demo.images import png
-
 TIMER_SECONDS = 120
 HOUR = 3600
 DAY = 24 * HOUR
-BLUE, GOLD, RED, INK, GREEN, SKY = (20, 90, 160), (240, 200, 40), (200, 40, 60), (30, 30, 30), (40, 150, 90), (120, 180, 230)
 VIDEO_URI = "https://download.blender.org/peach/bigbuckbunny_movies/BigBuckBunny_320x180.mp4"
 AUDIO_URI = "https://upload.wikimedia.org/wikipedia/commons/c/c8/Example.ogg"
 COMMONS_FILE = "https://commons.wikimedia.org/wiki/Special:FilePath/"
@@ -32,6 +29,7 @@ APPLE, SUNFLOWER, CAT, LION = (
     photo("Lion_waiting_in_Namibia.jpg"),
 )
 FLOWER = photo("JPEG_example_flower.jpg")
+SUN_ICON = photo("Weather-clear.svg", 240)
 
 DataBuilder = Callable[[float], dict]
 
@@ -103,7 +101,7 @@ def _weather(now: float) -> dict:
         "max_temp": 31,
         "condition": "Clear and sunny",
         "condition_code": "clear",
-        "icon": png(GOLD, SKY),
+        "icon": SUN_ICON,
         "location": "San Antonio",
         "forecast": _forecast(now),
     }
