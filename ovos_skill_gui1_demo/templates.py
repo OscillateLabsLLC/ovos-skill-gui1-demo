@@ -33,6 +33,21 @@ SUN_ICON = photo("Weather-clear.svg", 240)
 
 DataBuilder = Callable[[float], dict]
 
+# Long enough to overflow one screen at the display's reading size, so the text template's paging shows: the backend
+# splits it into pages that fit the frame and turns them at reading pace. Short text would sit in one chip instead.
+LONG_TEXT = (
+    "A text template carries words and nothing else. The display decides how they look. "
+    "A short answer sits in a single glowing chip, large enough to read from across the room. "
+    "A long answer, like this one, is split into pages that fit the frame, and the display turns the pages "
+    "at reading pace, about two hundred words a minute, with dots beneath to show where you are. "
+    "The skill never asks for a font, a colour or a box; it sends the words and the title, and every display "
+    "that speaks this protocol renders them in its own style. "
+    "That is the whole idea of the template vocabulary: a skill declares what it wants to show, "
+    "and the surface decides how to show it. "
+    "When this page has been read, the next one arrives on its own, and when the last one has been read, "
+    "the text starts again from the beginning until the skill clears it or shows something else."
+)
+
 
 def _image(now: float) -> dict:
     return {
@@ -180,7 +195,7 @@ TEMPLATE_DATA: dict[str, DataBuilder] = {
     "SYSTEM_loading": lambda now: {"label": "Fetching the forecast"},
     "SYSTEM_status": lambda now: {"label": "Lights turned off", "success": True},
     "SYSTEM_error": lambda now: {"label": "Could not reach the server", "detail": "Timed out after 10 seconds"},
-    "SYSTEM_text": lambda now: {"text": "GUI-1 text template. It scrolls when the text is long. " * 4, "title": "SYSTEM_text"},
+    "SYSTEM_text": lambda now: {"text": LONG_TEXT, "title": "SYSTEM_text"},
     "SYSTEM_image": _image,
     "SYSTEM_animated_image": _animated_image,
     "SYSTEM_list": _list,

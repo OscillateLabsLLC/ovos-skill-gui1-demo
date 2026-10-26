@@ -26,7 +26,7 @@ Skill id: `ovos-skill-gui1-demo.oscillatelabs`. Entry point group: `opm.skill`.
 | Say | The skill does this |
 |---|---|
 | "show me the {template} demo", "demo the {template} template", "gui demo {template}" | Shows that one template with data in every key of the catalogue, says "Here is the {template} template.", waits 20 s, then clears the namespace. |
-| "run the gui demo", "show every template" | Shows all 19 templates in catalogue order, 4 s each, then clears the namespace. |
+| "run the gui demo", "show every template" | Shows all 19 templates in catalogue order, 4 s each, except the text template (24 s, so its pages turn) and the media player (20 s, so its three views can be tapped through), then clears the namespace. |
 | "show the broken gui demo" | Sends six faulty requests, 4 s each, then clears. Each `title` names its fault. |
 | "show the gui update demo" | Shows `SYSTEM_text`. After 3 s it changes `text`. After 3 s more it removes `title` with an explicit `null`. After 3 s more it clears. |
 | "show the ambient demo" | Sends `gui.ambient.weather` and `gui.ambient.notifications` with `count` 3. After 5 s it sends `count` 0. It shows no template. |
@@ -37,6 +37,7 @@ The `{template}` words are: text, image, animated image, list, grid, table, html
 Data details:
 
 - Images are photographs from Wikimedia Commons, fetched by file name through `Special:FilePath` and scaled server-side (`templates.py`, `photo`), so the demo needs the network; `SYSTEM_animated_image` is the turning-Earth GIF. The weather `icon` is the Tango clear-sky icon, an SVG that Commons renders to PNG. The in-memory image makers (`images.py`) stay for the degradation demo and tests. No image is a file path ([3.5](https://github.com/OpenVoiceOS/architecture/blob/b6c1583/gui-1.md#35-image-delivery)).
+- The text demo sends about 160 words, so a display that pages long text shows it turning: on Visage that is five pages at 432 × 736, one every 10 s.
 - The weather demo sends `condition_code` and a forecast of three entries.
 - The timer demo sends an `end_time` 120 s after the request.
 - The media player demo sends a playlist and search results. After 4 s it sends `media_position` 4000 in a new `gui.value.set`.

@@ -23,6 +23,10 @@ from ovos_skill_gui1_demo.templates import (
 SINGLE_HOLD_SECONDS = 20
 IDLE_MARGIN_SECONDS = 10
 STEP_SECONDS = 4
+# Steps that need longer than STEP_SECONDS to show what they have: the text template turns a page every 8 to 10 s
+# (measured on Visage at 432 x 736 and 432 x 650, 25 to 30 words a page), and the media player has three views to
+# tap through (now playing, results, queue).
+HOLD_SECONDS = {"SYSTEM_text": 24, "SYSTEM_media_player": 20}
 UPDATE_STEP_SECONDS = 3
 AMBIENT_HOLD_SECONDS = 5
 MEDIA_POSITION_DELAY_SECONDS = 4
@@ -109,7 +113,7 @@ class GUI1DemoSkill(OVOSSkill):
         self.runner.cancel()
 
     def _single(self, message: Message, pause: Pause, template: str) -> None:
-        hold = SINGLE_HOLD_SECONDS
+        hold = max(SINGLE_HOLD_SECONDS, HOLD_SECONDS.get(template, 0))
         self._show(message, template, TEMPLATE_DATA[template](time.time()), hold + IDLE_MARGIN_SECONDS)
         self._speak(message, "showing", template=spoken_name(template))
         if template == "SYSTEM_media_player":
@@ -124,7 +128,7 @@ class GUI1DemoSkill(OVOSSkill):
         for template, build in TEMPLATE_DATA.items():
             self._show(message, template, build(time.time()), PERSISTENT)
             self._speak(message, "showing", template=spoken_name(template))
-            if not pause(STEP_SECONDS):
+            if not pause(HOLD_SECONDS.get(template, STEP_SECONDS)):
                 return
         self._finish(message)
 
