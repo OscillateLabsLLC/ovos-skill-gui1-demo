@@ -2,7 +2,7 @@
 
 from collections.abc import Callable
 
-from ovos_skill_gui1_demo.images import animated_gif, png
+from ovos_skill_gui1_demo.images import png
 
 TIMER_SECONDS = 120
 HOUR = 3600
@@ -10,14 +10,36 @@ DAY = 24 * HOUR
 BLUE, GOLD, RED, INK, GREEN, SKY = (20, 90, 160), (240, 200, 40), (200, 40, 60), (30, 30, 30), (40, 150, 90), (120, 180, 230)
 VIDEO_URI = "https://download.blender.org/peach/bigbuckbunny_movies/BigBuckBunny_320x180.mp4"
 AUDIO_URI = "https://upload.wikimedia.org/wikipedia/commons/c/c8/Example.ogg"
+COMMONS_FILE = "https://commons.wikimedia.org/wiki/Special:FilePath/"
+
+
+def photo(name: str, width: int | None = 320) -> str:
+    """A Wikimedia Commons image by file name, scaled server-side; ``width=None`` is the original (an animated GIF).
+
+    Real photographs, so the demo shows pictures and not the striped stand-ins the skill draws in memory (``images.py``,
+    still used where no photo fits). Needs the network; a backend shows its image fallback without it.
+    """
+    return f"{COMMONS_FILE}{name}" if width is None else f"{COMMONS_FILE}{name}?width={width}"
+
+
+WATERFALL = photo("Hopetoun_falls.jpg", 640)
+EARTH = photo("Rotating_earth_(large).gif", None)
+MILK, BREAD, COFFEE = photo("Glass_of_milk.jpg", 160), photo("Sourdough_bread.jpg", 160), photo("Roasted_coffee_beans.jpg", 160)
+APPLE, SUNFLOWER, CAT, LION = (
+    photo("Red_Apple.jpg"),
+    photo("Sunflower_from_Silesia2.jpg"),
+    photo("Cat03.jpg"),
+    photo("Lion_waiting_in_Namibia.jpg"),
+)
+FLOWER = photo("JPEG_example_flower.jpg")
 
 DataBuilder = Callable[[float], dict]
 
 
 def _image(now: float) -> dict:
     return {
-        "image": png(BLUE, GOLD),
-        "caption": "Stripes drawn in memory",
+        "image": WATERFALL,
+        "caption": "Hopetoun Falls, Victoria (Wikimedia Commons)",
         "title": "SYSTEM_image",
         "fill": "fit",
         "background_color": "#101820",
@@ -26,8 +48,8 @@ def _image(now: float) -> dict:
 
 def _animated_image(now: float) -> dict:
     return {
-        "image": animated_gif(RED, INK),
-        "caption": "Two frames, looping",
+        "image": EARTH,
+        "caption": "A turning Earth (Wikimedia Commons)",
         "title": "SYSTEM_animated_image",
         "fill": "crop",
         "background_color": "#000000",
@@ -36,16 +58,16 @@ def _animated_image(now: float) -> dict:
 
 def _list(now: float) -> dict:
     items = [
-        {"title": "Milk", "subtitle": "Two litres", "image": png(SKY, INK)},
-        {"title": "Bread", "subtitle": "Sourdough", "image": png(GOLD, INK)},
-        {"title": "Coffee", "subtitle": "Whole bean", "image": png(INK, GOLD)},
+        {"title": "Milk", "subtitle": "Two litres", "image": MILK},
+        {"title": "Bread", "subtitle": "Sourdough", "image": BREAD},
+        {"title": "Coffee", "subtitle": "Whole bean", "image": COFFEE},
     ]
     return {"title": "Shopping list", "items": items}
 
 
 def _grid(now: float) -> dict:
-    colours = [("Blue", BLUE), ("Gold", GOLD), ("Red", RED), ("Green", GREEN)]
-    return {"title": "Colour swatches", "items": [{"image": png(c, INK), "title": name} for name, c in colours]}
+    photos = [("Apple", APPLE), ("Sunflower", SUNFLOWER), ("Cat", CAT), ("Lion", LION)]
+    return {"title": "Photo grid", "items": [{"image": image, "title": name} for name, image in photos]}
 
 
 def _table(now: float) -> dict:
@@ -92,7 +114,7 @@ def _audio_player(now: float) -> dict:
         "title": "Example Ogg",
         "artist": "Wikimedia Commons",
         "album": "Sample Sounds",
-        "image": png(RED, GOLD),
+        "image": FLOWER,
         "position": 42000,
         "duration": 187000,
         "playing": True,
@@ -104,15 +126,15 @@ def _playlist() -> list[dict]:
         {
             "title": "Big Buck Bunny",
             "artist": "Blender Foundation",
-            "image": png(GREEN, GOLD),
+            "image": SUNFLOWER,
             "uri": VIDEO_URI,
             "duration": 596000,
         },
-        {"title": "Example Ogg", "artist": "Wikimedia Commons", "image": png(RED, GOLD), "uri": AUDIO_URI, "duration": 187000},
+        {"title": "Example Ogg", "artist": "Wikimedia Commons", "image": FLOWER, "uri": AUDIO_URI, "duration": 187000},
         {
             "title": "Live stream",
             "artist": "Demo Radio",
-            "image": png(BLUE, SKY),
+            "image": WATERFALL,
             "uri": "https://example.org/live",
             "duration": -1,
         },
@@ -124,7 +146,7 @@ def _search_results() -> list[dict]:
         {
             "title": "Big Buck Bunny",
             "artist": "Blender Foundation",
-            "image": png(GREEN, GOLD),
+            "image": SUNFLOWER,
             "uri": VIDEO_URI,
             "skill_id": "ovos-skill-gui1-demo.oscillatelabs",
             "match_confidence": 0.92,
@@ -132,7 +154,7 @@ def _search_results() -> list[dict]:
         {
             "title": "Elephants Dream",
             "artist": "Blender Foundation",
-            "image": png(INK, SKY),
+            "image": LION,
             "uri": "https://download.blender.org/ED/ED_1024.avi",
             "skill_id": "ovos-skill-gui1-demo.oscillatelabs",
             "match_confidence": 0.71,
@@ -145,7 +167,7 @@ def _media_player(now: float) -> dict:
         "media_title": "Big Buck Bunny",
         "media_artist": "Blender Foundation",
         "media_album": "Open Movies",
-        "media_image": png(GREEN, GOLD),
+        "media_image": SUNFLOWER,
         "media_uri": VIDEO_URI,
         "media_position": 0,
         "media_duration": 596000,

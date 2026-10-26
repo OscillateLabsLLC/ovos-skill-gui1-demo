@@ -36,7 +36,7 @@ The `{template}` words are: text, image, animated image, list, grid, table, html
 
 Data details:
 
-- All images are `data:` URIs that the skill makes in memory: PNG stripes, and a two-frame GIF for `SYSTEM_animated_image`. No image is a file path ([3.5](https://github.com/OpenVoiceOS/architecture/blob/b6c1583/gui-1.md#35-image-delivery)).
+- Images are photographs from Wikimedia Commons, fetched by file name through `Special:FilePath` and scaled server-side (`templates.py`, `photo`), so the demo needs the network; `SYSTEM_animated_image` is the turning-Earth GIF. The weather `icon` is still a striped PNG `data:` URI drawn in memory (`images.py`). No image is a file path ([3.5](https://github.com/OpenVoiceOS/architecture/blob/b6c1583/gui-1.md#35-image-delivery)).
 - The weather demo sends `condition_code` and a forecast of three entries.
 - The timer demo sends an `end_time` 120 s after the request.
 - The media player demo sends a playlist and search results. After 4 s it sends `media_position` 4000 in a new `gui.value.set`.
