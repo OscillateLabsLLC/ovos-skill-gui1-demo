@@ -29,6 +29,13 @@ STEP_SECONDS = 4
 HOLD_SECONDS = {"SYSTEM_text": 24, "SYSTEM_media_player": 20}
 UPDATE_STEP_SECONDS = 3
 AMBIENT_HOLD_SECONDS = 5
+NOTIFICATION_HOLD_SECONDS = 14
+# Two transient popups that time out into the stored list, and one sticky warning that stays until cleared.
+NOTIFICATIONS = [
+    {"text": "Timer done: tea", "style": "info", "duration": 8},
+    {"text": "New message from Sam", "style": "info", "duration": 10},
+    {"text": "Battery low", "type": "sticky", "style": "warning"},
+]
 MEDIA_POSITION_DELAY_SECONDS = 4
 NOTIFICATION_COUNT = 3
 PERSISTENT = True
@@ -94,6 +101,10 @@ class GUI1DemoSkill(OVOSSkill):
     def handle_update_demo(self, message: Message):
         self.runner.start("update", self._update_demo, message)
 
+    @intent_handler("demo_notifications.intent")
+    def handle_notifications_demo(self, message: Message):
+        self.runner.start("notifications", self._notifications_demo, message)
+
     @intent_handler("demo_ambient.intent")
     def handle_ambient_demo(self, message: Message):
         self.runner.start("ambient", self._ambient_demo, message)
@@ -154,6 +165,21 @@ class GUI1DemoSkill(OVOSSkill):
         self._speak(message, "update_title")
         if pause(UPDATE_STEP_SECONDS):
             self._finish(message)
+
+    def _notifications_demo(self, message: Message, pause: Pause) -> None:
+        self.display.serve(message)
+        self.display.clear_if_showing()
+        sent = [self.display.notify(record) for record in NOTIFICATIONS]
+        self.log.info(f"gui1-demo: {len(sent)} notifications raised")
+        self._ambient(message, "gui.ambient.notifications", {"count": len(sent)})
+        self._speak(message, "notifications_sent")
+        if not pause(NOTIFICATION_HOLD_SECONDS):
+            return
+        for record in sent:
+            if record["type"] == "sticky":
+                self.display.clear_notification(record)
+        self._ambient(message, "gui.ambient.notifications", {"count": 0})
+        self._speak(message, "notifications_cleared")
 
     def _ambient_demo(self, message: Message, pause: Pause) -> None:
         self.display.serve(message)

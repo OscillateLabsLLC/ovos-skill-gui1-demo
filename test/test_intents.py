@@ -127,3 +127,21 @@ def test_stop_method_clears_in_the_stop_message_session(skill):
     assert shape(sent) == [VS, (PS, ["SYSTEM_clock"]), CL]
     assert_conforming_envelope(sent)
     assert skill.can_stop(utterance("stop")) is False
+
+
+def test_notifications_demo_raises_three_popups_and_clears_the_sticky_one(skill):
+    run(skill, skill.handle_notifications_demo, "demo_notifications")
+    kinds = [m.msg_type for m in skill.bus.sent if m.msg_type.startswith(("ovos.notification", "gui.ambient"))]
+    assert kinds == [
+        "ovos.notification.api.set",
+        "ovos.notification.api.set",
+        "ovos.notification.api.set",
+        "gui.ambient.notifications",
+        "ovos.notification.api.pop.clear.delete",
+        "gui.ambient.notifications",
+    ]
+    raised = [m.data for m in skill.bus.sent if m.msg_type == "ovos.notification.api.set"]
+    assert [r["type"] for r in raised] == ["transient", "transient", "sticky"]
+    assert all(r["sender"] == skill.skill_id for r in raised)
+    cleared = next(m.data["notification"] for m in skill.bus.sent if m.msg_type.endswith("clear.delete"))
+    assert cleared["text"] == "Battery low"

@@ -29,6 +29,7 @@ Skill id: `ovos-skill-gui1-demo.oscillatelabs`. Entry point group: `opm.skill`.
 | "run the gui demo", "show every template" | Shows all 19 templates in catalogue order, 4 s each, except the text template (24 s, so its pages turn) and the media player (20 s, so its three views can be tapped through), then clears the namespace. |
 | "show the broken gui demo" | Sends six faulty requests, 4 s each, then clears. Each `title` names its fault. |
 | "show the gui update demo" | Shows `SYSTEM_text`. After 3 s it changes `text`. After 3 s more it removes `title` with an explicit `null`. After 3 s more it clears. |
+| "show the notification demo" | Raises three notification popups (`ovos.notification.api.set`): two transient ones that time out into the display's stored list, and one sticky warning; sets the badge count to 3. After 14 s it clears the sticky one and the count. It shows no template. |
 | "show the ambient demo" | Sends `gui.ambient.weather` and `gui.ambient.notifications` with `count` 3. After 5 s it sends `count` 0. It shows no template. |
 | "stop the gui demo", or "stop" | Stops the running demo and clears the namespace. |
 

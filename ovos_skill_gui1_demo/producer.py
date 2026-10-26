@@ -64,3 +64,15 @@ class Display:
 
     def ambient(self, topic: str, data: dict) -> None:
         self.origin_bus.emit(Message(topic, {"__from": self.skill_id, **data}))
+
+    def notify(self, record: dict) -> dict:
+        """Raise a notification popup as ovos-shell's notification API does (``ovos.notification.api.set``); the
+        record is returned filled in, so the same one can clear it later."""
+        full = {"sender": self.skill_id, "duration": 10, "action": None, "type": "transient", "style": "info"}
+        full.update({"callback_data": {}, **record})
+        self.origin_bus.emit(Message("ovos.notification.api.set", full))
+        return full
+
+    def clear_notification(self, record: dict) -> None:
+        """Take a popup down and off storage (``ovos.notification.api.pop.clear.delete``), by sender and text."""
+        self.origin_bus.emit(Message("ovos.notification.api.pop.clear.delete", {"notification": record}))
