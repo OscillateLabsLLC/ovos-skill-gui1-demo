@@ -18,6 +18,9 @@ dependencies = [
     "ovos-workshop",
 ]
 
+[project.urls]
+Repository = "https://github.com/OscillateLabsLLC/ovos-skill-gui1-demo"
+
 [project.optional-dependencies]
 test = [
     "ovos-plugin-manager",
